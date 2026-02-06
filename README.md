@@ -1,5 +1,9 @@
 Assignment 3 - Replicating a Classic Experiment  
 ===
+- Project Description: Our experiment will test the users reaction time to colors with different amounts of contrast appearing on the screen. We will conduct our experiment by making the user first do a control reaction time test with a neutral contrast. After this we will make the users going through 3 rounds of tests for 3 different levels of contrast (9 tests in total). At the end the users will be given two charts they can look at. The first will be a chart that shows how their tests with the different contrast levels compare to their control test. The second chart will show how the average all of their tests compares with the average of other users tests. We will use the local client for timing (to keep everything standard) and Labspace for color as an alternative to RGB.
+
+
+**EVERYTHING BELOW THIS LINE IS FROM THE ORIGINAL README**
 
 For the scope of this project, assume the role of a scientist who runs experiments for a living.
 
