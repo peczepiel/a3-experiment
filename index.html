@@ -1,9 +1,282 @@
-<!DOCTYPE html>
-<div id="container"></div>
-<script type="module">
+<!doctype html>
+<html lang="en">
 
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Change Detection Task</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap');
 
-console.log(d3);
+        body {
+            box-sizing: border-box;
+            font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            min-height: 100%;
+        }
 
-</script>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .header {
+            margin-bottom: 24px;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.3px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #5a5a6e;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-primary {
+            background-color: #3d5a80;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2c4a6e;
+        }
+
+        .btn-secondary {
+            background-color: #e8ecf0;
+            color: #3d5a80;
+        }
+
+        .btn-secondary:hover {
+            background-color: #dce2e8;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            background-color: #e8f4f8;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #3d5a80;
+            margin-left: auto;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #3d5a80;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .stimulus-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e8ecf0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .stimulus-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #8a8a9a;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        #Color {
+            display: block;
+            border-radius: 4px;
+        }
+
+        #Color rect {
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+    <style>
+        @view-transition {
+            navigation: auto;
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Color Change Detection Task</h1>
+            <p class="subtitle">Click on the square as soon as you notice its color has changed. Response times are
+                recorded in the console.</p>
+        </div>
+        <div class="controls"><button id="resetBtn" class="btn btn-primary">Reset Trial</button> <button id="nextBtn"
+                class="btn btn-secondary">Next Condition</button> <span id="contrastLevel" class="status-badge"> <span
+                    class="status-dot"></span> <span>High Contrast</span> </span>
+        </div>
+        <div class="stimulus-container">
+            <svg id="Color" width="320" height="320"></svg>
+        </div>
+        <div
+            style="margin-top: 20px; padding: 16px; background-color: #f0f4f8; border-radius: 6px; border: 1px solid #dce2e8;">
+            <div
+                style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #8a8a9a; font-weight: 600; margin-bottom: 8px;">
+                Last Reaction Time
+            </div>
+            <div id="reactionTimeDisplay" style="font-size: 24px; font-weight: 600; color: #3d5a80;">
+                —
+            </div>
+        </div>
+    </div>
+    <script type="module">
+
+        import { lab } from "https://cdn.jsdelivr.net/npm/d3-color@3/+esm";
+        import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+        const width = 320;
+        const height = 320;
+
+        const lowContrast = [
+            [lab(62, -24, -26), lab(85, -30, -15)],
+            [lab(45, 71, 35), lab(85, 90, 120)],
+            [lab(60, -50, 62), lab(40, -15, 45)]
+        ];
+
+        const medContrast = [
+            [lab(30, 30, -10), lab(70, 45, -15)],
+            [lab(70, -45, 0), lab(30, -20, -5)],
+            [lab(40, -15, 45), lab(35, 25, 25)]
+        ];
+
+        const medHighContrast = [
+            [lab(83, -45, 15), lab(30, -30, 35)],
+            [lab(72, -29, -27), lab(20, 35, -20)],
+            [lab(19, 30, 0), lab(70, 15, 10)]
+        ];
+
+        const highContrast = [
+            [lab(85, 15, -15), lab(23, 15, -4)],
+            [lab(87, 15, 0), lab(25, 25, 35)],
+            [lab(23, -8, -18), lab(85, -45, 15)]
+        ];
+
+        var svg = d3.select("#Color");
+
+        // Array of contrast levels in order
+        const contrastLevels = [
+            { name: "High Contrast", data: highContrast },
+            { name: "Med-High Contrast", data: medHighContrast },
+            { name: "Medium Contrast", data: medContrast },
+            { name: "Low Contrast", data: lowContrast }
+        ];
+        let currentContrastIndex = 0;
+
+        // Function to add a color-switching rect
+        function addColorRect(x, y, size) {
+            // Randomly select a pairing from current contrast level
+            const colorPair = contrastLevels[currentContrastIndex].data[Math.floor(Math.random() * contrastLevels[currentContrastIndex].data.length)];
+
+            // Create the rect with first color
+            const rect = svg.append("rect")
+                .attr("x", x)
+                .attr("y", y)
+                .attr("width", size)
+                .attr("height", size)
+                .attr("fill", `lab(${colorPair[0].l} ${colorPair[0].a} ${colorPair[0].b})`);
+
+            // Set random time (between 3s and 10s) to switch colors
+            const switchTime = Math.random() * 7000 + 3000;
+            let colorChangeTime = null;
+            let hasClicked = false;
+
+            setTimeout(() => {
+                rect.attr("fill", `lab(${colorPair[1].l} ${colorPair[1].a} ${colorPair[1].b})`);
+                colorChangeTime = Date.now();
+
+                console.log(`Square switched colors after ${switchTime.toFixed(2)} ms`);
+                console.log(`Color pair: ${colorPair[0].toString()} -> ${colorPair[1].toString()}`);
+            }, switchTime);
+
+            // Add click handler to track reaction time
+            rect.on("click", function () {
+                if (colorChangeTime && !hasClicked) {
+                    hasClicked = true;
+                    const reactionTime = Date.now() - colorChangeTime;
+                    console.log(`Reaction time: ${reactionTime} ms`);
+
+                    // Update the display
+                    document.getElementById('reactionTimeDisplay').textContent = `${reactionTime} ms`;
+                }
+            });
+        }
+
+        // Function to update the contrast level display
+        function updateContrastDisplay() {
+            const badge = document.getElementById('contrastLevel');
+            badge.querySelector('span:last-child').textContent = contrastLevels[currentContrastIndex].name;
+        }
+
+        // Function to reset and regenerate the single rect
+        function resetRects() {
+            svg.selectAll("rect").remove();
+            const size = 300;
+            const x = (width - size) / 2;
+            const y = (height - size) / 2;
+            addColorRect(x, y, size);
+        }
+
+        // Reset button handler
+        document.getElementById('resetBtn').addEventListener('click', resetRects);
+
+        // Next contrast level button handler
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentContrastIndex = (currentContrastIndex + 1) % contrastLevels.length;
+            updateContrastDisplay();
+            resetRects();
+        });
+
+        // Initial setup
+        resetRects();
+
+    </script>
+</html>
