@@ -9,10 +9,10 @@ Color Palletes in lab space. WCAG has contrast levels rated low (3:1) good for g
  - High contrast = 7+ (was thinking we could use 8)
 
 Generating palletes via all in Lab space: http://vrl.cs.brown.edu/color
- - Low contrast color palletes (2 rating): [(62, -24, -26), (85, -30, -15)] [(45, 71, 35), (45, 71, 35)] [(60, -50, 62), (40, -15, 45)]
- - Medium contrast color palletes (4 rating): [(30, 30, -10), (70, 45, -15)] [(70, -45, 0), (30, -20, -5)] [(40, -15, 45), (35, 25, 25)]
- - Medium-high contrast color palletes (6 rating): [(83, -45, 15), (30, -30, 35)] [(72, -29, -27), (20, 35, -20)] [(19, 30, 0), (70, 15, 10)]
- - High contrast color palletes (8 rating): [(85, 15, -15), (85, 15, -15)] [(87, 15, 0), (25, 25, 35)] [(23, -8, -18), (85, -45, 15)]
+ - Low contrast color palletes (2 rating):[lab(62, -24, -26), lab(85, -30, -15)], [lab(45, 71, 35), lab(85, 90, 120)], [lab(60, -50, 62), lab(40, -15, 45)]
+ - Medium contrast color palletes (4 rating):[lab(30, 30, -10), lab(70, 45, -15)], [lab(70, -45, 0), lab(30, -20, -5)], [lab(40, -15, 45), lab(35, 25, 25)]
+ - Medium-high contrast color palletes (6 rating):[lab(83, -45, 15), lab(30, -30, 35)], [lab(72, -29, -27), lab(20, 35, -20)], [lab(19, 30, 0), lab(70, 15, 10)]
+ - High contrast color palletes (8 rating):[lab(85, 15, -15), lab(23, 15, -4)], [lab(87, 15, 0), lab(25, 25, 35)],[lab(23, -8, -18), lab(85, -45, 15)]
 
 **EVERYTHING BELOW THIS LINE IS FROM THE ORIGINAL README**
 
