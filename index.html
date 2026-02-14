@@ -86,6 +86,30 @@
             background-color: #dce2e8;
         }
 
+        .btn-primary:disabled {
+            background-color: #d0d9e3;
+            color: #a0a5b0;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-secondary:disabled {
+            background-color: #dce2e8;
+            color: #8a8a9a;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-secondary.highlighted {
+            background-color: #3d5a80;
+            color: white;
+            font-weight: 700;
+        }
+
+        .btn-secondary.highlighted:hover {
+            background-color: #2c4a6e;
+        }
+
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -147,12 +171,14 @@
     <div class="container">
         <div class="header">
             <h1 class="title">Color Change Detection Task</h1>
-            <p class="subtitle">Click on the square as soon as you notice its color has changed. Response times are
-                recorded in the console.</p>
+            <p class="subtitle">Click on the square as soon as you notice its color has changed. Once clicked, click the
+                next color pair button to proceed.
+                Once you've gone through 3 colors pairings at each contrast level, click the next condition button to
+                move to the next contrast level.</p>
         </div>
-        <div class="controls"><button id="resetBtn" class="btn btn-primary">Reset Trial</button> <button id="nextBtn"
-                class="btn btn-secondary">Next Condition</button> <span id="contrastLevel" class="status-badge"> <span
-                    class="status-dot"></span> <span>High Contrast</span> </span>
+        <div class="controls"><button id="resetBtn" class="btn btn-primary">Next Color Pair</button> <button
+            id="nextBtn" class="btn btn-secondary">Next Condition</button> <button id="doneBtn" class="btn btn-secondary" disabled>Done</button> <span id="contrastLevel"
+            class="status-badge"> <span class="status-dot"></span> <span>High Contrast</span> </span>
         </div>
         <div class="stimulus-container">
             <svg id="Color" width="320" height="320"></svg>
@@ -177,32 +203,33 @@
         const height = 320;
 
         const lowContrast = [
-            [lab(62, -24, -26), lab(85, -30, -15)],
-            [lab(45, 71, 35), lab(85, 90, 120)],
-            [lab(60, -50, 62), lab(40, -15, 45)]
+            [lab(60, 20, 20), lab(50, 15, 15)],  
+            [lab(50, -30, 40), lab(40, -35, 35)],
+            [lab(65, 10, -20), lab(75, 15, -15)]
         ];
 
         const medContrast = [
-            [lab(30, 30, -10), lab(70, 45, -15)],
-            [lab(70, -45, 0), lab(30, -20, -5)],
-            [lab(40, -15, 45), lab(35, 25, 25)]
+            [lab(55, 40, 20), lab(75, 55, 30)],
+            [lab(45, -35, 50), lab(65, -20, 65)],
+            [lab(65, 15, -30), lab(85, 30, -20)]
         ];
 
+
         const medHighContrast = [
-            [lab(83, -45, 15), lab(30, -30, 35)],
-            [lab(72, -29, -27), lab(20, 35, -20)],
-            [lab(19, 30, 0), lab(70, 15, 10)]
+            [lab(40, 60, 30), lab(70, 40, 50)],
+            [lab(35, -40, 45), lab(65, -20, 25)],
+            [lab(60, -20, -40), lab(90, 0, -20)]
         ];
 
         const highContrast = [
-            [lab(85, 15, -15), lab(23, 15, -4)],
-            [lab(87, 15, 0), lab(25, 25, 35)],
-            [lab(23, -8, -18), lab(85, -45, 15)]
+            [lab(85, -40, 15), lab(45, 0, 55)],
+            [lab(80, 20, -30), lab(40, -20, 10)],
+            [lab(90, -10, -10), lab(50, 30, 30)]
         ];
 
         var svg = d3.select("#Color");
 
-        // Array of contrast levels in order
+        // Array of contrast levels in orders
         const contrastLevels = [
             { name: "High Contrast", data: highContrast },
             { name: "Med-High Contrast", data: medHighContrast },
@@ -210,11 +237,14 @@
             { name: "Low Contrast", data: lowContrast }
         ];
         let currentContrastIndex = 0;
+        let currentColorPair = 0;
+        let reactedCurrent = false;
+        const completedContrasts = new Set();
 
         // Function to add a color-switching rect
         function addColorRect(x, y, size) {
             // Randomly select a pairing from current contrast level
-            const colorPair = contrastLevels[currentContrastIndex].data[Math.floor(Math.random() * contrastLevels[currentContrastIndex].data.length)];
+            const colorPair = contrastLevels[currentContrastIndex].data[currentColorPair];
 
             // Create the rect with first color
             const rect = svg.append("rect")
@@ -246,6 +276,10 @@
 
                     // Update the display
                     document.getElementById('reactionTimeDisplay').textContent = `${reactionTime} ms`;
+
+                    // Mark that the user reacted to the current switch and update buttons
+                    reactedCurrent = true;
+                    updateButtonStates();
                 }
             });
         }
@@ -256,27 +290,100 @@
             badge.querySelector('span:last-child').textContent = contrastLevels[currentContrastIndex].name;
         }
 
+        // Function to update button states
+        function updateButtonStates() {
+            const resetBtn = document.getElementById('resetBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const doneBtn = document.getElementById('doneBtn');
+
+            // If all contrasts completed, enable Done and disable others
+            if (completedContrasts.size === contrastLevels.length) {
+                resetBtn.disabled = true;
+                nextBtn.disabled = true;
+                doneBtn.disabled = false;
+                doneBtn.classList.add('highlighted');
+                nextBtn.classList.remove('highlighted');
+                return;
+            }
+
+            // Disable both until the participant has reacted to the current change
+            if (!reactedCurrent) {
+                resetBtn.disabled = true;
+                nextBtn.disabled = true;
+                doneBtn.disabled = true;
+                nextBtn.classList.remove('highlighted');
+                doneBtn.classList.remove('highlighted');
+                return;
+            }
+
+            // After reaction: if last color pair, enable next condition; otherwise enable next color pair
+            doneBtn.disabled = true;
+            doneBtn.classList.remove('highlighted');
+
+            if (currentColorPair === 2) {
+                resetBtn.disabled = true;
+                nextBtn.disabled = false;
+                nextBtn.classList.add('highlighted');
+            } else {
+                resetBtn.disabled = false;
+                nextBtn.disabled = true;
+                nextBtn.classList.remove('highlighted');
+            }
+        }
+
         // Function to reset and regenerate the single rect
         function resetRects() {
             svg.selectAll("rect").remove();
+            // Reset reacted state for the new trial
+            reactedCurrent = false;
             const size = 300;
             const x = (width - size) / 2;
             const y = (height - size) / 2;
             addColorRect(x, y, size);
+            updateButtonStates();
         }
 
         // Reset button handler
-        document.getElementById('resetBtn').addEventListener('click', resetRects);
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            currentColorPair = (currentColorPair + 1) % 3;
+            resetRects();
+        });
 
         // Next contrast level button handler
         document.getElementById('nextBtn').addEventListener('click', () => {
-            currentContrastIndex = (currentContrastIndex + 1) % contrastLevels.length;
-            updateContrastDisplay();
-            resetRects();
+            if (currentColorPair == 2) {
+                // Mark this contrast as completed
+                completedContrasts.add(currentContrastIndex);
+
+                // If all contrasts completed, enable Done and show congrats
+                if (completedContrasts.size === contrastLevels.length) {
+                    document.getElementById('resetBtn').disabled = true;
+                    document.getElementById('nextBtn').disabled = true;
+                    const doneBtn = document.getElementById('doneBtn');
+                    doneBtn.disabled = false;
+                    doneBtn.classList.add('highlighted');
+                    document.getElementById('contrastLevel').querySelector('span:last-child').textContent = "All Conditions Completed";
+                    alert('Congratulations — you have completed all contrast levels!');
+                    return;
+                }
+
+                // Move to next contrast
+                currentColorPair = 0;
+                currentContrastIndex = (currentContrastIndex + 1) % contrastLevels.length;
+                updateContrastDisplay();
+                resetRects();
+            }
+        });
+
+        // Done button handler
+        document.getElementById('doneBtn').addEventListener('click', () => {
+            alert('Well done! You have finished the experiment.');
+            document.getElementById('doneBtn').disabled = true;
         });
 
         // Initial setup
         resetRects();
 
     </script>
+
 </html>
