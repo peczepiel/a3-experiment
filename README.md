@@ -1,6 +1,6 @@
 Assignment 3 - Replicating a Classic Experiment  
 ===
-*Created by: Anthony Coutts, Peter Czepiel, and Timothy Hutzley*
+- *Created by: Anthony Coutts, Peter Czepiel, and Timothy Hutzley*
 **Project Description and Background**
 --- 
 Our experiment tests the users' reaction time to colors with different amounts of contrast appearing on the screen. We conducted our experiment by making the user do three tests in each of our four trials (12 total tests). Our group believes that the reaction time of users will be quicker when testing on colors of higher contrastWe chose the four different trials based on the different levels of contrast outlined in the Web Contrast Accessibility Guidelines (WCAG). These guidelines define contrast in the three sections below:
