@@ -43,16 +43,20 @@ Here are two examples of what the charts look like:
 **Technical Achievements**
 ---
 
-1. Timing Consistency
+1. Timing Consistency:
 - It was brought to our attention through our first few tests that using Javascript commands like *setTimeout()* may lead to a delay in the collection of the users reaction time. To mitigate this and record the most accurate reaction times possible, we measure the time immediately after SVG color change instead of capturing when the time is set. We also calcuate the reaction time using *Date.now()* to ensure that all times are calculated down to the millisecond. These fixes reduce any issues with browser speed or other outside variables.
-2. Differing Intervals
+2. Differing Intervals:
 - To ensure that the user is surprised by the change of the color each time, we use *Math.random()* to generate a delay between 3000 and 10,000 milliseconds. This prevents users from prematurely preparing for the color change and makes all test genuine.
 
 **Design Achievements**
 ---
 
-1. Used Lab colors instead of Hex or RGB
-2. Created the table with colored squares in the readme (could be tech achievement)
+1. One Page Experience:
+- Our application has three different "pages" that the user accesses during their experiment (start page, main experiment page, chart page). While this looks like three seperate pages to users, all of the code is held within one HTML file. This make it so the user does not have to wait for loading times while switching between pages (which may have been the case if using a framework like React).
+2. Clean UI:
+- Because our experiment is centered around focusing on the exact moment when their is a change in color (sometimes a small change), we chose to keep the layout of the site very clean and non-distracting. This helps the user focus on the colored square without being distracted by other elements of the page.
+3. Lab Colors:
+- In our app, we chose to use colors within the Lab space rather than other spaces like RBG or Hex. We decided to do this because of the "5% change" example that we discussed in class. In spaces like RGB or Hex (used in most applications), a 5% difference in color is not very noticable because their is no "Lightness" metric like Lab has. This choice makes it easier for users to distinguish small changes in contrast.
 
 **Resources**
 ---
