@@ -52,6 +52,7 @@ Here are two examples of what the charts look like:
 ---
 
 1. Used Lab colors instead of Hex or RGB
+2. Created the table with colored squares in the readme (could be tech achievement)
 
 **Resources**
 ---
