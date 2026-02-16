@@ -4,7 +4,7 @@ Created by: Anthony Coutts, Peter Czepiel, and Timothy Hutzley
 ---
 **Project Description and Background**
 --- 
-Our experiment tests the users' reaction time to colors with different amounts of contrast appearing on the screen. We conducted our experiment by making the user do three tests in each of our four trials (12 total tests). Our group believes that the reaction time of users will be quicker when testing on colors of higher contrastWe chose the four different trials based on the different levels of contrast outlined in the Web Contrast Accessibility Guidelines (WCAG). These guidelines define contrast in the three sections below:
+Our experiment tests the users' reaction time to colors with different amounts of contrast appearing on the screen. We conducted our experiment by making the user do three tests in each of our four trials (12 total tests). Our group believes that the reaction time of users will be quicker when testing on colors of higher contrast. We chose the four different trials based on the different levels of contrast outlined in the Web Contrast Accessibility Guidelines (WCAG). These guidelines define contrast in the three sections below:
 
 1. Low Contrast: Good for graphical images and large text (Contrast Rating of 0-3)
 2. Medium Contrast: Good for small text (Contrast Rating of 3-4.5)
@@ -46,7 +46,7 @@ Here are two examples of what the charts look like:
 1. Timing Consistency:
 - It was brought to our attention through our first few tests that using Javascript commands like *setTimeout()* may lead to a delay in the collection of the users reaction time. To mitigate this and record the most accurate reaction times possible, we measure the time immediately after SVG color change instead of capturing when the time is set. We also calcuate the reaction time using *Date.now()* to ensure that all times are calculated down to the millisecond. These fixes reduce any issues with browser speed or other outside variables.
 2. Differing Intervals:
-- To ensure that the user is surprised by the change of the color each time, we use *Math.random()* to generate a delay between 3000 and 10,000 milliseconds. This prevents users from prematurely preparing for the color change and makes all test genuine.
+- To ensure that the user is surprised by the change of the color each time, we use *Math.random()* to generate a delay between 3,000 and 10,000 milliseconds. This prevents users from prematurely preparing for the color change and makes all test genuine.
 
 **Design Achievements**
 ---
@@ -56,7 +56,7 @@ Here are two examples of what the charts look like:
 2. Clean UI:
 - Because our experiment is centered around focusing on the exact moment when their is a change in color (sometimes a small change), we chose to keep the layout of the site very clean and non-distracting. This helps the user focus on the colored square without being distracted by other elements of the page.
 3. Lab Colors:
-- In our app, we chose to use colors within the Lab space rather than other spaces like RBG or Hex. We decided to do this because of the "5% change" example that we discussed in class. In spaces like RGB or Hex (used in most applications), a 5% difference in color is not very noticable because their is no "Lightness" metric like Lab has. This choice makes it easier for users to distinguish small changes in contrast.
+- In our app, we chose to use colors within the Lab space rather than other spaces like RBG or Hex. We decided to do this because of the "5% change" example that we discussed in class. In spaces like RGB or Hex (used in most applications), a 5% difference in color is not very noticable because there is no "Lightness" metric like Lab has. This choice makes it easier for users to distinguish small changes in contrast.
 
 **Resources**
 ---
