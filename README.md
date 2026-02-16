@@ -17,7 +17,7 @@ We believed some of these ranges (specifically Medium and High) were too large. 
 3. Medium-High Contrast: Range of 4.5-7, find a color that is ~6
 4. High Contrast: Range of 7+, find a color that is ~8
 
-These four trials will consist of three tests each where the user will be shown a starting color, then be asked to click whenever they see that color change. To remove as many other variables as possible, we chose our colors using Lab space (instead of RGB or Hex). We generated our 24 color palette using the Brown University Color Palette Generator.
+These four trials will consist of three tests each where the user will be shown a starting color, then be asked to click whenever they see that color change. To remove as many other variables as possible, we chose our colors using Lab space (instead of RGB or Hex). We generated our 24 color palette using the Brown University Color Palette Generator. Along with these four trials, we added a control (baseline) trial at the beginning to help with creation of the charts at the end of the study. For the control test we chose a bright red and bright green. The colors for this trial are the same for each test, allowing the user to take the average of three tests to find their baseline reaction time. 
 
 **Chosen Colors and Test Layout**
 ---
@@ -33,8 +33,9 @@ These four trials will consist of three tests each where the user will be shown 
 **Results and Visualizations**
 ---
 At the end of their tests, users will be given two charts populated with data for them to look at. 
-1. The first will be a chart that shows how different their reaction time was in each contrast level. This chart will be populated with only data from one user. 
-2. The second chart will show how the average all of their tests compared with the average of all other users' tests in each contrast category.
+1. The first will be a chart that shows how different their reaction time was in each contrast level compared to their average on the control (baseline) trial. This chart will be populated with only data from one user. 
+2. The second chart will show how the average all of their tests compared with the average of all other users' tests in each contrast category, including the control (baseline) level.
+
 Here are two examples of what the charts look like:
 - Chart1
 - Chart2 
@@ -42,7 +43,10 @@ Here are two examples of what the charts look like:
 **Technical Achievements**
 ---
 
-1. Kept timing consistent
+1. Timing Consistency
+- It was brought to our attention through our first few tests that using Javascript commands like *setTimeout()* may lead to a delay in the collection of the users reaction time. To mitigate this and record the most accurate reaction times possible, we measure the time immediately after SVG color change instead of capturing when the time is set. We also calcuate the reaction time using *Date.now()* to ensure that all times are calculated down to the millisecond. These fixes reduce any issues with browser speed or other outside variables.
+2. Differing Intervals
+- To ensure that the user is surprised by the change of the color each time, we use *Math.random()* to generate a delay between 3000 and 10,000 milliseconds. This prevents users from prematurely preparing for the color change and makes all test genuine.
 
 **Design Achievements**
 ---
