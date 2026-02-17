@@ -125,6 +125,7 @@
     <script type="module">
         import { lab } from "https://cdn.jsdelivr.net/npm/d3-color@3/+esm";
         import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+        import axios from "https://cdn.jsdelivr.net/npm/axios@1.6.8/+esm";
 
         const width = 320;
         const height = 320;
@@ -157,6 +158,15 @@
         
         let currentLevelTimes = [];
         let finalResults = [];
+        
+        // create local PID if it doesn't exist, otherwise use existing one to get previous results
+        const PID_KEY = "participantId";
+        let participantId = localStorage.getItem(PID_KEY);
+        if (!participantId) { participantId = crypto.randomUUID(); localStorage.setItem(PID_KEY, participantId); }
+
+        const api = axios.create({ baseURL: "" });
+        const postCondition = (condition, times, avg) => api.post("/api/condition", { participantId, condition, times, avg });
+        const getOthers = async () => (await api.get("/api/others-averages", { params: { exclude: participantId } })).data;
 
         //all of these are for navigating between pages
         document.getElementById('startBtn').addEventListener('click', () => {
@@ -166,10 +176,10 @@
             updateContrastDisplay();
         });
 
-        function showResults() {
+        async function showResults() {
             document.getElementById('testPage').classList.remove('active');
             document.getElementById('resultsPage').classList.add('active');
-            renderCharts();
+            await renderCharts();
         }
 
         //experiment logic
@@ -185,6 +195,8 @@
             let hasClicked = false;
 
             const startTime = performance.now();
+
+            // rAF loop for more consistent timing than setTimeout
             function waitForColorChange(now) {
                 if (now - startTime >= switchTime) {
                     rect.attr("fill", `lab(${colorPair[1].l} ${colorPair[1].a} ${colorPair[1].b})`);
@@ -276,11 +288,14 @@
         document.getElementById('nextBtn').addEventListener('click', () => {
             if (currentColorPair == 2) {
                 //calc avg for this level
-                const avg = currentLevelTimes.reduce((a, b) => a + b, 0) / currentLevelTimes.length;
+                const avgRaw = currentLevelTimes.reduce((a, b) => a + b, 0) / currentLevelTimes.length;
                 finalResults.push({
                     condition: contrastLevels[currentContrastIndex].name,
-                    avgTime: Math.round(avg)
+                    avgTimeRaw: avgRaw,
+                    avgTime: Math.round(avgRaw)
                 });
+                postCondition(contrastLevels[currentContrastIndex].name, currentLevelTimes, avgRaw)
+                    .catch(error => console.error("Failed to save condition", error));
                 
                 currentLevelTimes = [];
 
@@ -307,16 +322,8 @@
         });
 
         //chart logic
-        function renderCharts() {
-
-            //REPLACE THIS WITH REAL DATA ONCE WE HAVE DATABASE
-            const otherUsersAvg = [
-                { condition: "Control (Baseline)", avgTime: 320 },
-                { condition: "High Contrast", avgTime: 350 },
-                { condition: "Med-High Contrast", avgTime: 410 },
-                { condition: "Medium Contrast", avgTime: 550 },
-                { condition: "Low Contrast", avgTime: 780 }
-            ];
+        async function renderCharts() {
+            const otherUsersAvg = await getOthers();
 
             const margin = {top: 20, right: 30, bottom: 40, left: 40};
             const width = 600 - margin.left - margin.right;
@@ -364,13 +371,14 @@
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
             const subgroups = ["You", "Others"];
-            const groups = finalResults.map(d => d.condition);
+            const groups = finalResults.map(resultEntry => resultEntry.condition);
             
-            const combinedData = finalResults.map((d, i) => {
+            const combinedData = finalResults.map((resultEntry) => {
+                const matchingOtherAverage = otherUsersAvg.find(otherEntry => otherEntry.condition === resultEntry.condition);
                 return {
-                    group: d.condition,
-                    You: d.avgTime,
-                    Others: otherUsersAvg[i] ? otherUsersAvg[i].avgTime : 400
+                    group: resultEntry.condition,
+                    You: resultEntry.avgTimeRaw,
+                    Others: matchingOtherAverage?.avgTime ?? null
                 };
             });
 
@@ -391,24 +399,24 @@
 
             //legend
             const legend = svg2.append("g").attr("transform", `translate(${width - 100}, 0)`);
-            subgroups.forEach((grp, i) => {
-                legend.append("rect").attr("x", 0).attr("y", i*20).attr("width", 10).attr("height", 10).style("fill", color(grp));
-                legend.append("text").attr("x", 15).attr("y", i*20 + 10).text(grp).style("font-size", "12px").attr("alignment-baseline", "middle");
+            subgroups.forEach((groupName, legendIndex) => {
+                legend.append("rect").attr("x", 0).attr("y", legendIndex*20).attr("width", 10).attr("height", 10).style("fill", color(groupName));
+                legend.append("text").attr("x", 15).attr("y", legendIndex*20 + 10).text(groupName).style("font-size", "12px").attr("alignment-baseline", "middle");
             });
 
             svg2.append("g")
                 .selectAll("g")
                 .data(combinedData)
                 .join("g")
-                .attr("transform", d => `translate(${x2(d.group)}, 0)`)
+                .attr("transform", groupEntry => `translate(${x2(groupEntry.group)}, 0)`)
                 .selectAll("rect")
-                .data(d => subgroups.map(key => ({key: key, value: d[key]})))
+                .data(groupEntry => subgroups.map(subgroup => ({ key: subgroup, value: groupEntry[subgroup] })))
                 .join("rect")
-                .attr("x", d => xSub(d.key))
-                .attr("y", d => y2(d.value))
+                .attr("x", barEntry => xSub(barEntry.key))
+                .attr("y", barEntry => y2(barEntry.value))
                 .attr("width", xSub.bandwidth())
-                .attr("height", d => height - y2(d.value))
-                .attr("fill", d => color(d.key));
+                .attr("height", barEntry => height - y2(barEntry.value))
+                .attr("fill", barEntry => color(barEntry.key));
         }
 
     </script>
