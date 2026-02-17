@@ -37,7 +37,7 @@ app.post("/api/condition", async(req, res) => {
       Array.isArray(times) && times.length === 3;
     if (!ok) return res.sendStatus(400);
 
-    const col=await getCol();
+    const col = await getCollection();
     await col.updateOne(
       {participantId},
       {$set:{participantId, [`conditions.${condition}`]:{times, avg}, updatedAt:new Date()}, $setOnInsert:{createdAt:new Date()}},
@@ -52,7 +52,7 @@ app.get("/api/others-averages", async(req, res) => {
     const exclude = typeof req.query.exclude === "string" ? req.query.exclude:"";
     const proj = Object.fromEntries(CONDITIONS.map(c=>[c,`$conditions.${c}.avg`]));
     const grp = Object.fromEntries(CONDITIONS.map(c=>[c,{$avg:`$${c}`}])); 
-    const col = await getCol();
+    const col = await getCollection();
     const [row] = await col.aggregate([{ $match:exclude?{participantId:{$ne:exclude}}: {} }, { $project:proj }, { $group:{_id:null,...grp} }]).toArray();
     res.json(CONDITIONS.map(c => ({condition:c, avgTime:row?.[c] ?? null})));
   }catch(e) { console.error("GET /api/others-averages failed", e); res.sendStatus(500); }
