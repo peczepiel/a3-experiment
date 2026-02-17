@@ -55,9 +55,10 @@
         .status-badge { display: inline-flex; align-items: center; padding: 6px 14px; background-color: #e8f4f8; border-radius: 20px; font-size: 13px; font-weight: 600; color: #3d5a80; margin-left: auto; }
         .status-dot { width: 8px; height: 8px; background-color: #3d5a80; border-radius: 50%; margin-right: 8px; }
 
-        .stimulus-container { background-color: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); border: 1px solid #e8ecf0; display: flex; justify-content: center; }
+        .stimulus-container { background-color: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); border: 1px solid #e8ecf0; display: flex; justify-content: center; position: relative; }
         #Color { display: block; border-radius: 4px; }
         #Color rect { cursor: pointer; }
+        #trialStartBtn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; width: 300px; height: 300px; border-radius: 4px; }
 
         .chart-container { background: white; padding: 20px; margin-top: 20px; border-radius: 8px; border: 1px solid #e8ecf0; }
         .bar { fill: #3d5a80; }
@@ -91,6 +92,7 @@
                 <span id="contrastLevel" class="status-badge"> <span class="status-dot"></span> <span>Control Test</span> </span>
             </div>
             <div class="stimulus-container">
+                <button id="trialStartBtn" class="btn btn-primary" style="font-size: 24px">Start Reaction Time Test</button>
                 <svg id="Color" width="320" height="320"></svg>
             </div>
             <div style="margin-top: 20px; padding: 16px; background-color: #f0f4f8; border-radius: 6px; border: 1px solid #dce2e8;">
@@ -150,6 +152,7 @@
         let currentColorPair = 0;
         let reactedCurrent = false;
         let completedContrasts = new Set();
+        const trialStartBtn = document.getElementById('trialStartBtn');
         
         let currentLevelTimes = [];
         let finalResults = [];
@@ -232,12 +235,17 @@
         function resetRects() {
             svg.selectAll("rect").remove();
             reactedCurrent = false;
+            trialStartBtn.style.display = 'inline-block';
+            updateButtonStates();
+        }
+
+        trialStartBtn.addEventListener('click', () => {
+            trialStartBtn.style.display = 'none';
             const size = 300;
             const x = (width - size) / 2;
             const y = (height - size) / 2;
             addColorRect(x, y, size);
-            updateButtonStates();
-        }
+        });
 
         document.getElementById('resetBtn').addEventListener('click', () => {
             currentColorPair = (currentColorPair + 1) % 3;
