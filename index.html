@@ -46,6 +46,7 @@
 
         .controls { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
         .btn { padding: 10px 18px; font-size: 13px; font-weight: 600; font-family: inherit; border: none; border-radius: 6px; cursor: pointer; transition: all 0.15s ease; }
+        .btn, #Color rect { touch-action: manipulation; }
         .btn-primary { background-color: #3d5a80; color: white; }
         .btn-primary:hover { background-color: #2c4a6e; }
         .btn-secondary { background-color: #e8ecf0; color: #3d5a80; }
@@ -183,20 +184,27 @@
             let colorChangeTime = null;
             let hasClicked = false;
 
-            setTimeout(() => {
-                rect.attr("fill", `lab(${colorPair[1].l} ${colorPair[1].a} ${colorPair[1].b})`);
-                colorChangeTime = Date.now();
-            }, switchTime);
+            const startTime = performance.now();
+            function waitForColorChange(now) {
+                if (now - startTime >= switchTime) {
+                    rect.attr("fill", `lab(${colorPair[1].l} ${colorPair[1].a} ${colorPair[1].b})`);
+                    colorChangeTime = performance.now();
+                    return;
+                }
+                requestAnimationFrame(waitForColorChange);
+            }
+            requestAnimationFrame(waitForColorChange);
 
-            rect.on("click", function () {
+            rect.on("pointerdown", function () {
                 if (colorChangeTime && !hasClicked) {
                     hasClicked = true;
-                    const reactionTime = Date.now() - colorChangeTime;
+                    const reactionTime = performance.now() - colorChangeTime;
+                    const displayedReactionTime = Math.round(reactionTime);
                     
                     //save reaction time for this level
                     currentLevelTimes.push(reactionTime);
 
-                    document.getElementById('reactionTimeDisplay').textContent = `${reactionTime} ms`;
+                    document.getElementById('reactionTimeDisplay').textContent = `${displayedReactionTime} ms`;
                     reactedCurrent = true;
                     updateButtonStates();
                 }
