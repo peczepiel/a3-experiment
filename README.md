@@ -4,20 +4,18 @@ Created by: Anthony Coutts, Peter Czepiel, and Timothy Hutzley
 ---
 **Project Description and Background**
 --- 
-Our experiment tests the users' reaction time to colors with different amounts of contrast appearing on the screen. We conducted our experiment by making the user do three tests in each of our four trials (12 total tests). Our group believes that the reaction time of users will be quicker when testing on colors of higher contrast. We chose the four different trials based on the different levels of contrast outlined in the Web Contrast Accessibility Guidelines (WCAG). These guidelines define contrast in the three sections below:
+Our experiment looks to build on and recreate previous research findings that colors that are closer together are harder for users to notice the difference and react to it. This type of experiment is useful in the visualization space because color is a visual feature that can often be processed preattentively, meaning differences can be detected rapidly without focused attention when the perceptual contrast is sufficiently large. So, understanding at what contrast level is sufficently large for humans to immediately notice the difference can be helpful visualization design.
 
-1. Low Contrast: Good for graphical images and large text (Contrast Rating of 0-3)
-2. Medium Contrast: Good for small text (Contrast Rating of 3-4.5)
-3. High Contrast: Best for all other components (4.5-7+)
+Our experiment tests the users' reaction time to colors with different amounts of contrast appearing on the screen. We conducted our experiment by making the user do three tests in each of our four trials (12 total tests). Our group believes that the reaction time of users will be quicker when testing on colors of higher contrast. We measure contrast using perceptual color distance (∆E) in CIELAB space, as prior work has shown that classical just-noticeable-difference (JND) assumptions underestimate the color separations required for reliable discrimination in visualization contexts (Szafir, 2018). This research modeled perceptual color discriminability in visualization tasks, which helped inform our four contrast levels outlined below:
 
-We believed some of these ranges (specifically Medium and High) were too large. Therefore, we implemented a fourth section to create our four trials that we test users on. Below is a breakdown of the four sections that our group used to outline our trials:
+1. Low Contrast: ∆E range 10-15
+2. Medium Contrast: ∆E range 25-30
+3. Medium-High Contrast: ∆E range 40-45
+4. High Contrast: ∆E range 60-75
 
-1. Low Contrast: Range of 0-3, find a color that is ~2
-2. Medium Contrast: Range of 3-4.5, find a color that is ~4
-3. Medium-High Contrast: Range of 4.5-7, find a color that is ~6
-4. High Contrast: Range of 7+, find a color that is ~8
+While the research also highlights size and shapes as factors in color discriminibilty, we selected these ranges to isolate the effect of perceptual color difference on reaction time.
 
-These four trials will consist of three tests each where the user will be shown a starting color, then be asked to click whenever they see that color change. To remove as many other variables as possible, we chose our colors using Lab space (instead of RGB or Hex). We generated our 24 color palette using the Brown University Color Palette Generator. Along with these four trials, we added a control (baseline) trial at the beginning to help with creation of the charts at the end of the study. For the control test we chose a bright red and bright green. The colors for this trial are the same for each test, allowing the user to take the average of three tests to find their baseline reaction time. 
+These four trials will consist of three tests each where the user will be shown a starting color, then be asked to click whenever they see that color change. To remove as many other variables as possible, we chose our colors using Lab space (instead of RGB or Hex). We generated our 24 color palette using the Brown University Color Palette Generator and then adjusted the colors to fit our desired ∆E ranges. ∆E values were computed using the colormine ∆E calculator. Along with these four trials, we added a control (baseline) trial at the beginning to help with creation of the charts at the end of the study. For the control test we chose a bright red and bright green. The colors for this trial are the same for each test, allowing the user to take the average of three tests to find their baseline reaction time. 
 
 **Chosen Colors and Test Layout**
 ---
@@ -25,10 +23,10 @@ These four trials will consist of three tests each where the user will be shown 
 
 | Contrast Rating | Test 1 | Test 2 | Test 3 |
 | :--- | :--- | :--- | :--- |
-| **Low** (2) | ![](https://img.shields.io/badge/_-BA836E?style=flat-square) ![](https://img.shields.io/badge/_-956D5E?style=flat-square) | ![](https://img.shields.io/badge/_-50842C?style=flat-square) ![](https://img.shields.io/badge/_-256C1E?style=flat-square) | ![](https://img.shields.io/badge/_-A299C2?style=flat-square) ![](https://img.shields.io/badge/_-CBB0D5?style=flat-square) |
-| **Medium** (4) | ![](https://img.shields.io/badge/_-B06553?style=flat-square) ![](https://img.shields.io/badge/_-FF8E72?style=flat-square) | ![](https://img.shields.io/badge/_-22701F?style=flat-square) ![](https://img.shields.io/badge/_-76A618?style=flat-square) | ![](https://img.shields.io/badge/_-A68CCF?style=flat-square) ![](https://img.shields.io/badge/_-FBA4D3?style=flat-square) |
-| **Med-High** (6) | ![](https://img.shields.io/badge/_-9E3C2B?style=flat-square) ![](https://img.shields.io/badge/_-D97753?style=flat-square) | ![](https://img.shields.io/badge/_-00582B?style=flat-square) ![](https://img.shields.io/badge/_-6FA571?style=flat-square) | ![](https://img.shields.io/badge/_-0098DA?style=flat-square) ![](https://img.shields.io/badge/_-D1E4FC?style=flat-square) |
-| **High** (8) | ![](https://img.shields.io/badge/_-5CD6A3?style=flat-square) ![](https://img.shields.io/badge/_-746E02?style=flat-square) | ![](https://img.shields.io/badge/_-D5AFF6?style=flat-square) ![](https://img.shields.io/badge/_-2B6350?style=flat-square) | ![](https://img.shields.io/badge/_-D6E8E8?style=flat-square) ![](https://img.shields.io/badge/_-986150?style=flat-square) |
+| **Low** (10-15) | ![](https://img.shields.io/badge/_-BA836E?style=flat-square) ![](https://img.shields.io/badge/_-956D5E?style=flat-square) | ![](https://img.shields.io/badge/_-50842C?style=flat-square) ![](https://img.shields.io/badge/_-256C1E?style=flat-square) | ![](https://img.shields.io/badge/_-A299C2?style=flat-square) ![](https://img.shields.io/badge/_-CBB0D5?style=flat-square) |
+| **Medium** (25-30) | ![](https://img.shields.io/badge/_-B06553?style=flat-square) ![](https://img.shields.io/badge/_-FF8E72?style=flat-square) | ![](https://img.shields.io/badge/_-22701F?style=flat-square) ![](https://img.shields.io/badge/_-76A618?style=flat-square) | ![](https://img.shields.io/badge/_-A68CCF?style=flat-square) ![](https://img.shields.io/badge/_-FBA4D3?style=flat-square) |
+| **Med-High** (40-45) | ![](https://img.shields.io/badge/_-9E3C2B?style=flat-square) ![](https://img.shields.io/badge/_-D97753?style=flat-square) | ![](https://img.shields.io/badge/_-00582B?style=flat-square) ![](https://img.shields.io/badge/_-6FA571?style=flat-square) | ![](https://img.shields.io/badge/_-0098DA?style=flat-square) ![](https://img.shields.io/badge/_-D1E4FC?style=flat-square) |
+| **High** (60-75) | ![](https://img.shields.io/badge/_-5CD6A3?style=flat-square) ![](https://img.shields.io/badge/_-746E02?style=flat-square) | ![](https://img.shields.io/badge/_-D5AFF6?style=flat-square) ![](https://img.shields.io/badge/_-2B6350?style=flat-square) | ![](https://img.shields.io/badge/_-D6E8E8?style=flat-square) ![](https://img.shields.io/badge/_-986150?style=flat-square) |
 
 **Results and Visualizations**
 ---
@@ -60,8 +58,8 @@ Here are two examples of what the charts look like:
 
 **Resources**
 ---
-- WCAG: https://www.w3.org/TR/WCAG21/#background-on-wcag-2
-- Contrast Checker: https://coolors.co/contrast-checker/e5ffff-87a3a5
+- Szafir, 2018: https://pubmed.ncbi.nlm.nih.gov/28866544/
+- ∆E calculator: https://colormine.org/delta-e-calculator
 - Brown University Color Palette Generator: http://vrl.cs.brown.edu/color
 - Lab to Hex Conversion for README: https://www.nixsensor.com/free-color-converter/?srsltid=AfmBOoroXBHQHl3y9riHy3LYlBupOlmsAERbdpeboL6-LybPIix5yGqs
 - Website and Documentation for Small Colored Squares in README: https://shields.io/badges
