@@ -15,7 +15,7 @@ Our experiment tests the users' reaction time to colors with different amounts o
 
 While the research also highlights size and shapes as factors in color discriminibilty, we selected these ranges to isolate the effect of perceptual color difference on reaction time.
 
-These four trials will consist of three tests each where the user will be shown a starting color, then be asked to click whenever they see that color change. To remove as many other variables as possible, we chose our colors using Lab space (instead of RGB or Hex). We generated our 24 color palette using the Brown University Color Palette Generator and then adjusted the colors to fit our desired ∆E ranges. ∆E values were computed using the colormine ∆E calculator. Along with these four trials, we added a control (baseline) trial at the beginning to help with creation of the charts at the end of the study. For the control test we chose a bright red and bright green. The colors for this trial are the same for each test, allowing the user to take the average of three tests to find their baseline reaction time. 
+These four trials will consist of three tests each where the user will be shown a starting color, then be asked to click whenever they see that color change. To remove as many other variables as possible, we chose our colors using Lab space (instead of RGB or Hex). We generated our 24 color palette using the Brown University Color Palette Generator and then adjusted the colors to fit our desired ∆E ranges. ∆E values were computed using the colormine ∆E calculator. Along with these four trials, we added a control (baseline) trial at the beginning to help with creation of the charts at the end of the study. For the control test we chose a bright red and bright green. The colors for this trial are the same for each test, allowing the user to take the average of three tests to find their baseline reaction time.
 
 **Chosen Colors and Test Layout**
 ---
@@ -42,9 +42,15 @@ Here are two examples of what the charts look like:
 ---
 
 1. Timing Consistency:
-- It was brought to our attention through our first few tests that using Javascript commands like *setTimeout()* may lead to a delay in the collection of the users reaction time. To mitigate this and record the most accurate reaction times possible, we measure the time immediately after SVG color change instead of capturing when the time is set. We also calcuate the reaction time using *Date.now()* to ensure that all times are calculated down to the millisecond. These fixes reduce any issues with browser speed or other outside variables.
+- It was brought to our attention through our first few tests that using Javascript commands like *setTimeout()* may lead to a delay in the collection of the users reaction time. To mitigate this and record the most accurate reaction times possible, we measure the time immediately by using a *requestAnimationFrame* or rAF loop and timestamp the exact moment the SVG color actually changes. We also calcuate the reaction time using *performance.now()* to ensure that all times are calculated down to the microsecond. These help reduce any issues with browser speed or other outside variables.
 2. Differing Intervals:
 - To ensure that the user is surprised by the change of the color each time, we use *Math.random()* to generate a delay between 3,000 and 10,000 milliseconds. This prevents users from prematurely preparing for the color change and makes all test genuine.
+3. Backend:
+- To store the reaction time data we decided to create a simple backend using Express + Node.js with MongoDB. This was to ensure the data was persistent across all experiments so that the current user's reaction time could be contrasted with the global averages from all other particpants. 
+4. Deployment:
+- For easy access to the site, we decided to deploy it using Vercel as it was geneally easy to setup and could manage hosting both our static html page as well as our backend.
+5. ReVISit:
+- On top of deploying the site using Vercel, to help us track the number of participants in real-time and ensure that the experiment was running smoothly, we utilized ReVISit to host the Vercel site for studies. We enabled screen recording to help us determine if the experiment was going well and stored the videos using ReVISits built-in firebase storage setup. 
 
 **Design Achievements**
 ---
