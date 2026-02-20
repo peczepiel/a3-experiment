@@ -35,8 +35,22 @@ At the end of their tests, users will be given two charts populated with data fo
 2. The second chart will show how the average all of their tests compared with the average of all other users' tests in each contrast category, including the control (baseline) level.
 
 Here are two examples of what the charts look like:
-- Chart1
-- Chart2 
+- ![Individual Chart](image.png)
+- ![Individual vs. Global Chart](image-1.png) 
+
+After conducting 15 separate trials we ended up with the following average reaction times:
+- Control (Baseline) - 321.8ms
+- High Contrast - 285.4ms
+- Med-High Contrast - 303.9ms
+- Med Contrast - 286.9ms
+- Low Contrast - 333.3ms
+
+The control (baseline) which was the first reaction time test ended up serving more as a warmup for the actual experiment rather than serving as a proper baseline (based on participant feedback, running the experiment ourselves, and confirming this behavior in the screen recordings).
+
+Overall, the faster groups ended up being high-contrast and med contrast colors, while med-high was slightly slower, with low contrast easily having the slowest average reaction time.
+
+When comparing each of the other contrast groups to high contast, the results were:
+- Med Contrast - 1.5ms slower (0.5% slower) &rarr basically the same
 
 **Technical Achievements**
 ---
