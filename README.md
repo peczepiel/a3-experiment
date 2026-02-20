@@ -38,7 +38,7 @@ Here are two examples of what the charts look like:
 - ![Individual Chart](image.png)
 - ![Individual vs. Global Chart](image-1.png) 
 
-After conducting 15 separate trials we ended up with the following average reaction times:
+After running the experiment using 15 separate participants, we ended up with the following average reaction times:
 - Control (Baseline) - 321.8ms
 - High Contrast - 285.4ms
 - Med-High Contrast - 303.9ms
@@ -50,7 +50,11 @@ The control (baseline) which was the first reaction time test ended up serving m
 Overall, the faster groups ended up being high-contrast and med contrast colors, while med-high was slightly slower, with low contrast easily having the slowest average reaction time.
 
 When comparing each of the other contrast groups to high contast, the results were:
-- Med Contrast - 1.5ms slower (0.5% slower) &rarr basically the same
+- Med Contrast - 1.5ms slower (0.5% slower) --> basically the same
+- Med-High Contrast - 18.5ms slower (6.5% slower) --> somewhat slower
+- Low Contrast - 47.9ms slower (16.8% slower) --> noticeable drop in reaction time
+
+From these results we can conclude that contrast level meaningfully impacts detection speed, and that low-contrast color changes are consistently the hardest for users to quickly react to. Once participants warmed up using the control group and understood the task, reaction times stayed nearly identical for high and medium contrast conditions with only a slight increase for med-high, and slowed the most for low contrast. This indicates that reduced visual contrast produces the largest decrease in performance when it comes to reaction time.
 
 **Technical Achievements**
 ---
